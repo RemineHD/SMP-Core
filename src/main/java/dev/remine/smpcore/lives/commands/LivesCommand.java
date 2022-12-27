@@ -22,6 +22,11 @@ public class LivesCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (args.length == 1)
         {
+
+            if (Bukkit.getPlayer(args[0]) == null) {
+                sender.sendMessage(ChatColor.RED + "Unable to find player.");
+                return true;
+            }
             SMPPlayer smpPlayer = instance.playerManager.getPlayer(Bukkit.getPlayer(args[0]).getUniqueId());
             if (smpPlayer != null)
             {

@@ -15,6 +15,10 @@ public class LivesAdminCommand {
         if (args.length >= 3)
         {
             int lives = Integer.parseInt(args[1]);
+            if (Bukkit.getPlayer(args[2]) == null) {
+                sender.sendMessage(ChatColor.RED + "Unable to find player.");
+                return true;
+            }
             SMPPlayer smpPlayer = instance.playerManager.getPlayer(Bukkit.getPlayer(args[2]).getUniqueId());
             if (smpPlayer == null)
             {
@@ -23,6 +27,7 @@ public class LivesAdminCommand {
             }
             smpPlayer.setLives(lives);
             instance.playerManager.savePlayer(smpPlayer);
+            sender.sendMessage(ChatColor.GREEN + "Successfully updated " + Bukkit.getPlayer(args[2]).getName() + "'s lives to: " + lives);
             return true;
         }
         else sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cUsage: /admin setlives <amount> <player>"));

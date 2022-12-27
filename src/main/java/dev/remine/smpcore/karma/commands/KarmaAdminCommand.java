@@ -15,6 +15,10 @@ public class KarmaAdminCommand {
         if (args.length >= 3)
         {
 
+            if (Bukkit.getPlayer(args[2]) == null) {
+                sender.sendMessage(ChatColor.RED + "Unable to find player.");
+                return true;
+            }
             int karma = Integer.parseInt(args[1]);
             SMPPlayer smpPlayer = instance.playerManager.getPlayer(Bukkit.getPlayer(args[2]).getUniqueId());
             if (smpPlayer == null)
@@ -24,6 +28,7 @@ public class KarmaAdminCommand {
             }
             smpPlayer.setKarma(karma);
             instance.playerManager.savePlayer(smpPlayer);
+            sender.sendMessage(ChatColor.GREEN + "Successfully updated " + Bukkit.getPlayer(args[2]).getName() + "'s Karma to: " + karma);
             return true;
         } else sender.sendMessage(ChatColor.RED + "Usage: /admin setkarma <amount> <player>");
 

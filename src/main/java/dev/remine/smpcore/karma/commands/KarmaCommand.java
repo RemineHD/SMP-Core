@@ -26,6 +26,10 @@ public class KarmaCommand implements CommandExecutor {
 
         if (args.length >= 1)
         {
+            if (Bukkit.getPlayer(args[0]) == null) {
+                sender.sendMessage(ChatColor.RED + "Unable to find player.");
+                return true;
+            }
             SMPPlayer smpPlayer = instance.playerManager.getPlayer(Bukkit.getPlayer(args[0]).getUniqueId());
             if (smpPlayer != null)
             {
