@@ -1,6 +1,6 @@
 # SMP Core
 
-This plugin add all the features you may want to make your SMP Server funnier!
+A plugin that adds all the features you want to make your SMP more fun!
 currently only the version 1.19.3 is supported.
 
 ## Features
