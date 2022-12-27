@@ -1,0 +1,15 @@
+name: SMPCore
+version: '${project.version}'
+main: dev.remine.smpcore.SMPCore
+api-version: 1.19
+authors: [ elremineh ]
+commands:
+  admin:
+    permission: smpcore.admin
+    permission-message: You don't have permission to use that command.
+  settings:
+    usage: /settings
+  lives:
+    usage: /lives (player)
+  team:
+    usage: /team help
