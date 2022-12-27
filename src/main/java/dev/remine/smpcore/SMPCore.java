@@ -1,6 +1,7 @@
 package dev.remine.smpcore;
 
 import dev.remine.smpcore.commands.AdminCommand;
+import dev.remine.smpcore.karma.SMPKarma;
 import dev.remine.smpcore.lives.SMPLives;
 import dev.remine.smpcore.mechanics.GuildWhitelistMechanic;
 import dev.remine.smpcore.player.SMPPlayerManager;
@@ -38,7 +39,9 @@ public final class SMPCore extends JavaPlugin {
         hypixelAPI = new HypixelAPI(UUID.fromString(apiKey));
         playerManager = new SMPPlayerManager(this);
 
+        Bukkit.getPluginManager().registerEvents(new SMPKarma(this), this);
         Bukkit.getPluginManager().registerEvents(new SMPLives(this), this);
+
 
         setupMechanics();
         setupCommands();

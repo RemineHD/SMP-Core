@@ -52,7 +52,7 @@ public class GuildWhitelistMechanic implements Listener {
             throw new RuntimeException(e);
         }
 
-        if (guild == null || instance.getGuildId() != guild.get_id())
+        if (guild == null || !instance.getGuildId().equals(guild.get_id()))
         {
             disallow(playerJoinEvent);
             return;

@@ -31,7 +31,7 @@ public class LivesCommand implements CommandExecutor {
             else
             {
                 sender.sendMessage(ChatColor.RED + "Unable to find player.");
-                return false;
+                return true;
             }
         } else
         {
@@ -43,7 +43,7 @@ public class LivesCommand implements CommandExecutor {
             }
             sender.sendMessage(ChatColor.RED + "An error has occurred. try again later");
         }
-        return false;
+        return true;
     }
 
 }

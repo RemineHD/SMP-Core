@@ -1,14 +1,19 @@
 package dev.remine.smpcore.player;
 
 import dev.remine.smpcore.SMPCore;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.UUID;
 
-public class SMPPlayerManager {
+public class SMPPlayerManager implements Listener {
 
     private SMPCore instance;
 
@@ -30,6 +35,8 @@ public class SMPPlayerManager {
             instance.getServer().shutdown();
 
         }
+
+        Bukkit.getPluginManager().registerEvents(this, instance);
 
     }
 
@@ -58,7 +65,6 @@ public class SMPPlayerManager {
 
         if (getPlayer(uniqueId) != null) return getPlayer(uniqueId);
 
-        player.setTeamId(UUID.fromString("na"));
         player.setKarma(instance.getConfig().getInt("DefaultKarma"));
         player.setLives(instance.getConfig().getInt("DefaultLives"));
 
@@ -70,24 +76,24 @@ public class SMPPlayerManager {
 
     public SMPPlayer getPlayer(UUID uniqueId)
     {
-        SMPPlayer player = new SMPPlayer(uniqueId);
-
-        if (getPlayerDataFile().getString("players." + uniqueId) != null)
+        if (getPlayerDataFile().getString(uniqueId.toString()) != null)
         {
-            player.setTeamId(UUID.fromString(getPlayerDataFile().getString("players." + uniqueId + ".teamId")));
-            player.setKarma(getPlayerDataFile().getInt("players." + uniqueId + ".karma"));
-            player.setLives(getPlayerDataFile().getInt("players." + uniqueId + ".lives"));
-            return player;
+            SMPPlayer smpPlayer = new SMPPlayer(uniqueId);
+            smpPlayer.setKarma(getPlayerDataFile().getInt(uniqueId + ".karma"));
+            smpPlayer.setLives(getPlayerDataFile().getInt(uniqueId + ".lives"));
+            smpPlayer.setTeamId(getPlayerDataFile().getString(uniqueId + ".teamId"));
+            return smpPlayer;
         }
         return null;
     }
 
     public void savePlayer(SMPPlayer smpPlayer)
     {
-        getPlayerDataFile().set("players.", smpPlayer.getPlayerId());
-        getPlayerDataFile().set("players." + smpPlayer.getPlayerId() + ".teamId", smpPlayer.getTeamId());
-        getPlayerDataFile().set("players." + smpPlayer.getPlayerId() + ".karma", smpPlayer.getKarma());
-        getPlayerDataFile().set("players." + smpPlayer.getPlayerId() + ".lives", smpPlayer.getLives());
+
+        getPlayerDataFile().set(smpPlayer.getPlayerId().toString(), "");
+        getPlayerDataFile().set(smpPlayer.getPlayerId() + ".teamId", smpPlayer.getTeamId());
+        getPlayerDataFile().set(smpPlayer.getPlayerId() +  ".karma", smpPlayer.getKarma());
+        getPlayerDataFile().set(smpPlayer.getPlayerId() +  ".lives", smpPlayer.getLives());
 
         try {
             saveDataFile();
@@ -96,6 +102,23 @@ public class SMPPlayerManager {
             instance.getLogger().warning("Error saving player.");
             exception.printStackTrace();
         }
+
+    }
+
+
+    @EventHandler
+    public void handlePlayerJoin(PlayerJoinEvent playerJoinEvent)
+    {
+
+        if (getPlayer(playerJoinEvent.getPlayer().getUniqueId()) == null)
+            getPlayerOrCreate(playerJoinEvent.getPlayer().getUniqueId());
+
+        SMPPlayer player = getPlayer(playerJoinEvent.getPlayer().getUniqueId());
+        playerJoinEvent.getPlayer().sendMessage("\n" +
+                "Karma: " + player.getKarma() +
+                "\n Lives: " + player.getLives() +
+                "\n TeamId: " + player.getTeamId() +
+                "\n");
 
     }
 

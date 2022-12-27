@@ -19,14 +19,14 @@ public class LivesAdminCommand {
             if (smpPlayer == null)
             {
                 sender.sendMessage(ChatColor.RED + "Unable to find player.");
-                return false;
+                return true;
             }
             smpPlayer.setLives(lives);
             instance.playerManager.savePlayer(smpPlayer);
             return true;
         }
         else sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cUsage: /admin setlives <amount> <player>"));
-        return false;
+        return true;
     }
 
 }

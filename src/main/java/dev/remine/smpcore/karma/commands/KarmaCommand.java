@@ -1,4 +1,50 @@
 package dev.remine.smpcore.karma.commands;
 
-public class KarmaCommand {
+import dev.remine.smpcore.SMPCore;
+import dev.remine.smpcore.player.SMPPlayer;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
+
+public class KarmaCommand implements CommandExecutor {
+
+    private SMPCore instance;
+
+    public KarmaCommand(SMPCore instance)
+    {
+        this.instance = instance;
+    }
+
+
+    @Override
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+
+        //11, 13, 15
+
+        if (args.length >= 1)
+        {
+            SMPPlayer smpPlayer = instance.playerManager.getPlayer(Bukkit.getPlayer(args[0]).getUniqueId());
+            if (smpPlayer != null)
+            {
+                sender.sendMessage(ChatColor.GREEN + Bukkit.getPlayer(args[0]).getName() + " have " + smpPlayer.getKarma() + " of Karma.");
+                return true;
+            }
+            else
+                sender.sendMessage(ChatColor.RED + "Unable to find player.");
+
+            return false;
+        }
+        SMPPlayer smpPlayer = instance.playerManager.getPlayer(Bukkit.getPlayer(sender.getName()).getUniqueId());
+        if (smpPlayer != null)
+        {
+            sender.sendMessage(ChatColor.GREEN + "You have " + smpPlayer.getKarma() + " of Karma.");
+            return true;
+        }
+        sender.sendMessage(ChatColor.RED + "An error has occurred. try again later");
+
+        return false;
+    }
 }

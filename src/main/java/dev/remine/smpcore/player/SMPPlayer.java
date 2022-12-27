@@ -11,7 +11,7 @@ public class SMPPlayer {
     }
 
     private UUID playerId;
-    private UUID teamId;
+    private String teamId;
 
     private int karma;
 
@@ -21,11 +21,11 @@ public class SMPPlayer {
         return playerId;
     }
 
-    public UUID getTeamId() {
+    public String getTeamId() {
         return teamId;
     }
 
-    public void setTeamId(UUID teamId) {
+    public void setTeamId(String teamId) {
         this.teamId = teamId;
     }
 
