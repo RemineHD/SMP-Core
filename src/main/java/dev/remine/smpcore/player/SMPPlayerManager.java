@@ -81,7 +81,7 @@ public class SMPPlayerManager implements Listener {
             SMPPlayer smpPlayer = new SMPPlayer(uniqueId);
             smpPlayer.setKarma(getPlayerDataFile().getInt(uniqueId + ".karma"));
             smpPlayer.setLives(getPlayerDataFile().getInt(uniqueId + ".lives"));
-            smpPlayer.setTeamId(getPlayerDataFile().getString(uniqueId + ".teamId"));
+            //smpPlayer.setTeamId(getPlayerDataFile().getString(uniqueId + ".teamId"));
             return smpPlayer;
         }
         return null;
@@ -91,7 +91,7 @@ public class SMPPlayerManager implements Listener {
     {
 
         getPlayerDataFile().set(smpPlayer.getPlayerId().toString(), "");
-        getPlayerDataFile().set(smpPlayer.getPlayerId() + ".teamId", smpPlayer.getTeamId());
+        //getPlayerDataFile().set(smpPlayer.getPlayerId() + ".teamId", smpPlayer.getTeamId());
         getPlayerDataFile().set(smpPlayer.getPlayerId() +  ".karma", smpPlayer.getKarma());
         getPlayerDataFile().set(smpPlayer.getPlayerId() +  ".lives", smpPlayer.getLives());
 
@@ -112,13 +112,6 @@ public class SMPPlayerManager implements Listener {
 
         if (getPlayer(playerJoinEvent.getPlayer().getUniqueId()) == null)
             getPlayerOrCreate(playerJoinEvent.getPlayer().getUniqueId());
-
-        SMPPlayer player = getPlayer(playerJoinEvent.getPlayer().getUniqueId());
-        playerJoinEvent.getPlayer().sendMessage("\n" +
-                "Karma: " + player.getKarma() +
-                "\n Lives: " + player.getLives() +
-                "\n TeamId: " + player.getTeamId() +
-                "\n");
 
     }
 

@@ -5,11 +5,13 @@ import dev.remine.smpcore.karma.SMPKarma;
 import dev.remine.smpcore.lives.SMPLives;
 import dev.remine.smpcore.mechanics.GuildWhitelistMechanic;
 import dev.remine.smpcore.player.SMPPlayerManager;
+import dev.remine.smpcore.teams.SMPTeamsManager;
 import net.hypixel.api.HypixelAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.IOException;
 import java.util.UUID;
 
 public final class SMPCore extends JavaPlugin {
@@ -19,6 +21,7 @@ public final class SMPCore extends JavaPlugin {
     private String guildId;
     public SMPPlayerManager playerManager;
 
+    public SMPTeamsManager teamsManager;
 
     @Override
     public void onEnable() {
@@ -38,6 +41,8 @@ public final class SMPCore extends JavaPlugin {
 
         hypixelAPI = new HypixelAPI(UUID.fromString(apiKey));
         playerManager = new SMPPlayerManager(this);
+        teamsManager = new SMPTeamsManager(this);
+
 
         Bukkit.getPluginManager().registerEvents(new SMPKarma(this), this);
         Bukkit.getPluginManager().registerEvents(new SMPLives(this), this);
@@ -50,7 +55,7 @@ public final class SMPCore extends JavaPlugin {
 
     private void setupMechanics()
     {
-        Bukkit.getServer().getPluginManager().registerEvents(new GuildWhitelistMechanic(this), this);
+        //Bukkit.getServer().getPluginManager().registerEvents(new GuildWhitelistMechanic(this), this);
     }
 
     private void setupCommands()
@@ -66,7 +71,12 @@ public final class SMPCore extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        try {
+            teamsManager.handleSave();
+        } catch (IOException e) {
+            getLogger().warning("Error saving teams.yml");
+            throw new RuntimeException(e);
+        }
     }
 
     public HypixelAPI getHypixelAPI() {

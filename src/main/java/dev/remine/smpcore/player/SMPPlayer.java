@@ -21,14 +21,6 @@ public class SMPPlayer {
         return playerId;
     }
 
-    public String getTeamId() {
-        return teamId;
-    }
-
-    public void setTeamId(String teamId) {
-        this.teamId = teamId;
-    }
-
     public int getKarma() {
         return karma;
     }
