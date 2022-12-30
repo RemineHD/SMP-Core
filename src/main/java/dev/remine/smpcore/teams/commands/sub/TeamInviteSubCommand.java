@@ -47,7 +47,7 @@ public class TeamInviteSubCommand {
                                         if (Bukkit.getPlayer(teamMember.getMemberId()) != null)
                                             Bukkit.getPlayer(teamMember.getMemberId()).sendMessage(ChatColor.translateAlternateColorCodes('&', "&a&l[◆] &e" + invited.getName() + " &fjoined the Team."));
                                     }
-                                }, new TextComponent(ChatColor.translateAlternateColorCodes('&', "&e" +executor.getName() + " &finvited you to the team: " + team.getTeamColor() + team.getTeamName() + "&f. &aClick here to accept.")))).show(invited);
+                                }, new TextComponent(ChatColor.translateAlternateColorCodes('&', "&e" +executor.getName() + " &finvited you to the team: &" + team.getTeamColor().getCode() + team.getTeamName() + "&f. &aClick here to accept.")))).show(invited);
                                 executor.sendMessage(ChatColor.GREEN + "Successfully invited " + invited.getName() + " to the team.");
                                 return true;
                             } else {

@@ -36,12 +36,15 @@ public class SMPPlayer implements ConfigurationSerializable {
 
         if (args.containsKey("playerId"))
             player.playerId = UUID.fromString((String) args.get("playerId"));
+        else return null;
 
         if (args.containsKey("karma"))
             player.setKarma((Integer) args.get("karma"));
+        else player.setKarma(0);
 
         if (args.containsKey("lives"))
             player.setLives((Integer) args.get("lives"));
+        else player.setLives(10);
 
         return player;
     }

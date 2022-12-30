@@ -42,18 +42,23 @@ public class Team implements ConfigurationSerializable {
 
         if (args.containsKey("teamId"))
             team.setTeamId(UUID.fromString((String) args.get("teamId")));
+        else return null;
 
         if (args.containsKey("teamName"))
             team.setTeamName((String)args.get("teamName"));
+        else return null;
 
         if (args.containsKey("teamColor"))
             team.setTeamColor(Color.valueOf((String) args.get("teamColor")));
+        else team.setTeamColor(Team.Color.GRAY);
 
         if (args.containsKey("motd"))
             team.setMotd((String)args.get("motd"));
+        else team.setMotd("");
 
         if (args.containsKey("members"))
             team.setMembers((List<TeamMember>) args.get("members"));
+        else return null;
 
         return team;
     }

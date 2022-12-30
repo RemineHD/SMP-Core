@@ -44,15 +44,19 @@ public class TeamMember implements ConfigurationSerializable {
 
         if (args.containsKey("playerName"))
             member.playerName = (String) args.get("playerName");
+        else return null;
 
         if (args.containsKey("memberId"))
             member.setMemberId(UUID.fromString((String) args.get("memberId")));
+        else return null;
 
         if (args.containsKey("memberRole"))
             member.setMemberRole(Role.valueOf((String) args.get("memberRole")));
+        else return null;
 
         if (args.containsKey("memberExp"))
             member.setMemberExp((Integer) args.get("memberExp"));
+        else return null;
 
         return member;
     }

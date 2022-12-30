@@ -40,7 +40,7 @@ public class TeamColorSubCommand {
                                 if (member.getMemberId().equals(player.getUniqueId()) && member.getMemberRole() == TeamMember.Role.LEADER)
                                 {
                                     team.setTeamColor(color);
-                                    sender.sendMessage(ChatColor.GREEN + "Successfully updated team color to: &" + color.getCode() + color.getName());
+                                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "Successfully updated team color to: &" + color.getCode() + color.getName()));
                                     return true;
                                 } else
                                 {
