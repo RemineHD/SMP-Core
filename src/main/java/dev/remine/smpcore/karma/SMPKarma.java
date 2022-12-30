@@ -29,7 +29,6 @@ public class SMPKarma implements Listener {
             if (smpPlayer != null)
             {
                 smpPlayer.setKarma(smpPlayer.getKarma() - 1);
-                instance.playerManager.savePlayer(smpPlayer);
                 killer.sendMessage(ChatColor.RED + "You have lost 1 of karma because you've killed another player.");
             }
         }

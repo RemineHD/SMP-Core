@@ -40,6 +40,12 @@ public class TeamKickSubCommand {
                                     } else {
                                         team.removeMember(kickedMember);
                                         sender.sendMessage(ChatColor.GREEN + "Successfully kicked " + kickedMember.playerName);
+
+                                        if (Bukkit.getPlayer(kickedMember.getMemberId()) != null)
+                                        {
+                                            instance.teamsManager.setupPlayerTeam(Bukkit.getPlayer(kickedMember.getMemberId()), null);
+                                            Bukkit.getPlayer(kickedMember.getMemberId()).sendMessage(ChatColor.RED + "You have been kicked off the team: " + team.getTeamName());
+                                        }
                                         return true;
                                     }
                                 } else {

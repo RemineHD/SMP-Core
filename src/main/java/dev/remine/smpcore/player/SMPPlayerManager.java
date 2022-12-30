@@ -7,10 +7,13 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 public class SMPPlayerManager implements Listener {
@@ -20,6 +23,8 @@ public class SMPPlayerManager implements Listener {
     private File file;
     private FileConfiguration playerDataFile;
 
+    private List<SMPPlayer> players = new ArrayList<>();
+
     public SMPPlayerManager(SMPCore instance)
     {
         this.instance = instance;
@@ -27,6 +32,9 @@ public class SMPPlayerManager implements Listener {
         try {
             setupPlayersStorage();
             getPlayerDataFile().options().copyDefaults(true);
+            playerDataFile.getList("players", Collections.emptyList()).forEach(obj -> {
+                if (obj instanceof SMPPlayer) players.add((SMPPlayer) obj);
+            });
             saveDataFile();
         } catch (Exception exception)
         {
@@ -35,6 +43,18 @@ public class SMPPlayerManager implements Listener {
             instance.getServer().shutdown();
 
         }
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                try {
+                    handleSave();
+                } catch (IOException e) {
+                    instance.getLogger().warning("Error saving players.yml");
+                    throw new RuntimeException(e);
+                }
+            }
+        }.runTaskTimerAsynchronously(instance, 36000, 0);
 
         Bukkit.getPluginManager().registerEvents(this, instance);
 
@@ -68,7 +88,7 @@ public class SMPPlayerManager implements Listener {
         player.setKarma(instance.getConfig().getInt("DefaultKarma"));
         player.setLives(instance.getConfig().getInt("DefaultLives"));
 
-        savePlayer(player);
+        players.add(player);
         instance.getLogger().info("new player created: " + player.getPlayerId());
         return player;
 
@@ -76,33 +96,12 @@ public class SMPPlayerManager implements Listener {
 
     public SMPPlayer getPlayer(UUID uniqueId)
     {
-        if (getPlayerDataFile().getString(uniqueId.toString()) != null)
+        for (SMPPlayer player : players)
         {
-            SMPPlayer smpPlayer = new SMPPlayer(uniqueId);
-            smpPlayer.setKarma(getPlayerDataFile().getInt(uniqueId + ".karma"));
-            smpPlayer.setLives(getPlayerDataFile().getInt(uniqueId + ".lives"));
-            //smpPlayer.setTeamId(getPlayerDataFile().getString(uniqueId + ".teamId"));
-            return smpPlayer;
+            if (player.getPlayerId().equals(uniqueId))
+                return player;
         }
         return null;
-    }
-
-    public void savePlayer(SMPPlayer smpPlayer)
-    {
-
-        getPlayerDataFile().set(smpPlayer.getPlayerId().toString(), "");
-        //getPlayerDataFile().set(smpPlayer.getPlayerId() + ".teamId", smpPlayer.getTeamId());
-        getPlayerDataFile().set(smpPlayer.getPlayerId() +  ".karma", smpPlayer.getKarma());
-        getPlayerDataFile().set(smpPlayer.getPlayerId() +  ".lives", smpPlayer.getLives());
-
-        try {
-            saveDataFile();
-        } catch (IOException exception)
-        {
-            instance.getLogger().warning("Error saving player.");
-            exception.printStackTrace();
-        }
-
     }
 
 
@@ -113,6 +112,12 @@ public class SMPPlayerManager implements Listener {
         if (getPlayer(playerJoinEvent.getPlayer().getUniqueId()) == null)
             getPlayerOrCreate(playerJoinEvent.getPlayer().getUniqueId());
 
+    }
+
+    public void handleSave() throws IOException {
+        instance.getLogger().info("successfully saved players.yml");
+        getPlayerDataFile().set("players", players);
+        saveDataFile();
     }
 
 }

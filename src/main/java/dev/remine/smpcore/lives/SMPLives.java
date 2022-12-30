@@ -40,7 +40,6 @@ public class SMPLives implements Listener {
         if (player != null)
         {
             player.setLives(player.getLives() - 1);
-            instance.playerManager.savePlayer(player);
             if (player.getLives() == 0)
             {
                 playerDeathEvent.getPlayer().kickPlayer(ChatColor.translateAlternateColorCodes('&', "&cYou have run out of lives."));

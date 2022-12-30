@@ -30,16 +30,22 @@ public class TeamLeaveSubCommand {
                         {
                             if (member.getMemberRole() == TeamMember.Role.LEADER)
                             {
-                                team.removeMember(member);
-                                for (TeamMember teamMember : team.getMembers())
-                                {
-                                    teamMember.setMemberRole(TeamMember.Role.LEADER);
-                                    if (Bukkit.getPlayer(teamMember.getMemberId()) != null)
-                                        Bukkit.getPlayer(teamMember.getMemberId()).sendMessage(ChatColor.GOLD + "You are the new Team Leader.");
-                                    return true;
-                                }
                                 sender.sendMessage(ChatColor.GOLD + "You left the team.");
-                                executor.setDisplayName(ChatColor.GRAY + executor.getName());
+                                team.removeMember(member);
+                                if (team.getMembers().size() == 0)
+                                {
+                                    sender.sendMessage(ChatColor.RED + "Your team has been dissolved due to lack of players.");
+                                    instance.teamsManager.removeTeam(team);
+                                } else {
+                                    for (TeamMember teamMember : team.getMembers())
+                                    {
+                                        teamMember.setMemberRole(TeamMember.Role.LEADER);
+                                        if (Bukkit.getPlayer(teamMember.getMemberId()) != null)
+                                            Bukkit.getPlayer(teamMember.getMemberId()).sendMessage(ChatColor.GOLD + "You are the new Team Leader.");
+                                        return true;
+                                    }
+                                }
+                                instance.teamsManager.setupPlayerTeam(executor, null);
                                 return true;
                             }
                             sender.sendMessage(ChatColor.GOLD + "You left the team.");

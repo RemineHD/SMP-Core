@@ -2,7 +2,9 @@ package dev.remine.smpcore.teams.commands;
 
 import dev.remine.smpcore.SMPCore;
 import dev.remine.smpcore.teams.commands.sub.*;
+import dev.remine.smpcore.teams.types.Team;
 import org.bukkit.ChatColor;
+import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -22,6 +24,17 @@ public class TeamCommand implements CommandExecutor {
 
         if (args.length >= 1)
         {
+
+            if (args[0].equalsIgnoreCase("list"))
+            {
+                sender.sendMessage("Layout: TEAM NAME | (MEMBERS)");
+                for (Team team : instance.teamsManager.getTeams())
+                {
+                    sender.sendMessage(team.getTeamName() + " (" + team.getMembers().size() + ")");
+                }
+                return true;
+            }
+
             if (args[0].equalsIgnoreCase("create"))
                 return new TeamCreateSubCommand().execute(instance, sender, command, args);
 

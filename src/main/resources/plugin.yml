@@ -3,6 +3,7 @@ version: '${project.version}'
 main: dev.remine.smpcore.SMPCore
 api-version: 1.19
 authors: [ elremineh ]
+depend: [MenuBuilder]
 commands:
   admin:
     permission: smpcore.admin
@@ -15,3 +16,5 @@ commands:
     usage: /team help
   karma:
     usage: /karma (player)
+  mbchat:
+    usage: /mbchat

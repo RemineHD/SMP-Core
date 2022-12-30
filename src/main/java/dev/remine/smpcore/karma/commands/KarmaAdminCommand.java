@@ -27,7 +27,6 @@ public class KarmaAdminCommand {
                 return true;
             }
             smpPlayer.setKarma(karma);
-            instance.playerManager.savePlayer(smpPlayer);
             sender.sendMessage(ChatColor.GREEN + "Successfully updated " + Bukkit.getPlayer(args[2]).getName() + "'s Karma to: " + karma);
             return true;
         } else sender.sendMessage(ChatColor.RED + "Usage: /admin setkarma <amount> <player>");

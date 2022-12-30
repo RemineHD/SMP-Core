@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
@@ -32,7 +33,9 @@ public class SMPTeamsManager {
 
         try {
             setupTeamsStorage();
-            teamsDataFile.getList("teams", teams);
+            teamsDataFile.getList("teams", Collections.emptyList()).forEach(obj -> {
+                if (obj instanceof Team) teams.add((Team) obj);
+            });
         } catch (Exception exception)
         {
             instance.getLogger().warning("Error loading teams.yml. Stopping the server.");
@@ -50,7 +53,7 @@ public class SMPTeamsManager {
                     throw new RuntimeException(e);
                 }
             }
-        }.runTaskTimerAsynchronously(instance, 0, 36000);
+        }.runTaskTimerAsynchronously(instance, 36000, 0);
 
         Bukkit.getPluginManager().registerEvents(new TeamPlayerCombat(instance), instance);
         Bukkit.getPluginManager().registerEvents(new TeamPlayerJoin(instance), instance);
@@ -59,7 +62,8 @@ public class SMPTeamsManager {
     }
 
     public void handleSave() throws IOException {
-        getTeamsDataFile().set("teams", Collections.singletonList(teams));
+        instance.getLogger().info("successfully saved teams.yml");
+        getTeamsDataFile().set("teams", teams);
         saveDataFile();
     }
 
@@ -91,7 +95,12 @@ public class SMPTeamsManager {
         return null;
     }
 
-    public boolean createTeam(String ownerName, UUID ownerId, String name, ChatColor color)
+    public List<Team> getTeams()
+    {
+        return teams;
+    }
+
+    public boolean createTeam(String ownerName, UUID ownerId, String name, Team.Color color)
     {
 
         if (isNameUsed(name))
@@ -99,11 +108,22 @@ public class SMPTeamsManager {
             Bukkit.getPlayer(ownerId).sendMessage(ChatColor.RED + "That name is already taken.");
             return false;
         }
-        Team team = new Team(name, color);
+        Team team = new Team(UUID.randomUUID(), name, color);
         team.addMember(new TeamMember(ownerName, ownerId, TeamMember.Role.LEADER));
         teams.add(team);
         instance.getLogger().info("New Team Registered: " + name + " (" + team.getTeamId() + ")");
         return true;
+    }
+
+    public void removeTeam(Team team)
+    {
+        teams.remove(team);
+        try {
+            handleSave();
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public Team getTeamByMember(UUID memberId)
@@ -125,6 +145,12 @@ public class SMPTeamsManager {
             }
         }
         return false;
+    }
+
+
+    public void setupPlayerTeam(Player player, Team team)
+    {
+
     }
 
 }

@@ -1,8 +1,15 @@
 package dev.remine.smpcore.teams.types;
 
+import org.bukkit.ChatColor;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
-public class TeamMember {
+public class TeamMember implements ConfigurationSerializable {
 
     private UUID memberId;
 
@@ -18,6 +25,36 @@ public class TeamMember {
         this.memberId = memberId;
         this.memberRole = memberRole;
         this.memberExp = 0;
+    }
+
+    @Override
+    public @NotNull Map<String, Object> serialize() {
+        LinkedHashMap result = new LinkedHashMap();
+        result.put("playerName", playerName);
+        result.put("memberId", String.valueOf(memberId));
+        result.put("memberRole", memberRole.asString());
+        result.put("memberExp", memberExp);
+        return result;
+    }
+
+    public static TeamMember deserialize(Map<String, Object> args)
+    {
+
+        TeamMember member = new TeamMember(null, null, null);
+
+        if (args.containsKey("playerName"))
+            member.playerName = (String) args.get("playerName");
+
+        if (args.containsKey("memberId"))
+            member.setMemberId(UUID.fromString((String) args.get("memberId")));
+
+        if (args.containsKey("memberRole"))
+            member.setMemberRole(Role.valueOf((String) args.get("memberRole")));
+
+        if (args.containsKey("memberExp"))
+            member.setMemberExp((Integer) args.get("memberExp"));
+
+        return member;
     }
 
     public UUID getMemberId() {
@@ -44,9 +81,30 @@ public class TeamMember {
         this.memberExp = memberExp;
     }
 
+
+
     public enum Role {
-        LEADER,
-        MEMBER
+        LEADER("LEADER"),
+        MEMBER("LEADER");
+
+        private String name;
+        Role(String name)
+        {
+            this.name = name;
+        }
+
+        public String asString()
+        {
+            return name;
+        }
+
+        public Role getRole(String role)
+        {
+            if (name.equals(role))
+                return this;
+            return null;
+        }
+
     }
 
 }

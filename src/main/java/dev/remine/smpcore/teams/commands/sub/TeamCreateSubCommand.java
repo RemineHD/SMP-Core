@@ -1,8 +1,10 @@
 package dev.remine.smpcore.teams.commands.sub;
 
 import dev.remine.smpcore.SMPCore;
+import dev.remine.smpcore.teams.types.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Color;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
@@ -19,9 +21,10 @@ public class TeamCreateSubCommand {
                     sender.sendMessage(ChatColor.RED + "Seems like you already are a member of a team. Please use /team leave and try again.");
                     return true;
                 }
-                if (instance.teamsManager.createTeam(sender.getName(), Bukkit.getPlayer(sender.getName()).getUniqueId(), args[1], ChatColor.GRAY))
+                if (instance.teamsManager.createTeam(sender.getName(), Bukkit.getPlayer(sender.getName()).getUniqueId(), args[1], Team.Color.GRAY))
                 {
                     sender.sendMessage(ChatColor.GREEN + "Successfully created the team: " + ChatColor.GRAY + args[1]);
+                    instance.teamsManager.setupPlayerTeam(Bukkit.getPlayer(sender.getName()), instance.teamsManager.getTeamByMember(Bukkit.getPlayer(sender.getName()).getUniqueId()));
                     return true;
                 }
                 sender.sendMessage(ChatColor.RED + "An error has occurred while creating your team.");

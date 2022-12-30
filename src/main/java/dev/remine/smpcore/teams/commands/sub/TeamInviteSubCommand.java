@@ -38,16 +38,14 @@ public class TeamInviteSubCommand {
                                     sender.sendMessage(ChatColor.RED + "That player is already member of a team.");
                                     return true;
                                 }
-                                new ChatMenuBuilder().withLine(new LineBuilder().append(new ChatListener() {
-                                    @Override
-                                    public void onClick(Player player) {
-                                        team.addMember(new TeamMember(invited.getName(), invited.getUniqueId(), TeamMember.Role.MEMBER));
-                                        invited.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&7" + invited.getName() + team.getTeamColor() + " [" + team.getTeamName() + "]"));
-                                        for (TeamMember teamMember : team.getMembers())
-                                        {
-                                            if (Bukkit.getPlayer(teamMember.getMemberId()) != null)
-                                                Bukkit.getPlayer(teamMember.getMemberId()).sendMessage(ChatColor.translateAlternateColorCodes('&', "&a&l[◆] &e" + invited.getName() + " &fjoined the Team."));
-                                        }
+
+                                new ChatMenuBuilder().withLine(new LineBuilder().append(player -> {
+                                    team.addMember(new TeamMember(invited.getName(), invited.getUniqueId(), TeamMember.Role.MEMBER));
+                                    instance.teamsManager.setupPlayerTeam(invited, team);
+                                    for (TeamMember teamMember : team.getMembers())
+                                    {
+                                        if (Bukkit.getPlayer(teamMember.getMemberId()) != null)
+                                            Bukkit.getPlayer(teamMember.getMemberId()).sendMessage(ChatColor.translateAlternateColorCodes('&', "&a&l[◆] &e" + invited.getName() + " &fjoined the Team."));
                                     }
                                 }, new TextComponent(ChatColor.translateAlternateColorCodes('&', "&e" +executor.getName() + " &finvited you to the team: " + team.getTeamColor() + team.getTeamName() + "&f. &aClick here to accept.")))).show(invited);
                                 executor.sendMessage(ChatColor.GREEN + "Successfully invited " + invited.getName() + " to the team.");

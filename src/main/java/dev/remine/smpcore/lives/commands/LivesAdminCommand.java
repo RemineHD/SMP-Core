@@ -26,7 +26,6 @@ public class LivesAdminCommand {
                 return true;
             }
             smpPlayer.setLives(lives);
-            instance.playerManager.savePlayer(smpPlayer);
             sender.sendMessage(ChatColor.GREEN + "Successfully updated " + Bukkit.getPlayer(args[2]).getName() + "'s lives to: " + lives);
             return true;
         }

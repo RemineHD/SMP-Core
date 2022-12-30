@@ -4,17 +4,29 @@ import dev.remine.smpcore.commands.AdminCommand;
 import dev.remine.smpcore.karma.SMPKarma;
 import dev.remine.smpcore.lives.SMPLives;
 import dev.remine.smpcore.mechanics.GuildWhitelistMechanic;
+import dev.remine.smpcore.player.SMPPlayer;
 import dev.remine.smpcore.player.SMPPlayerManager;
 import dev.remine.smpcore.teams.SMPTeamsManager;
+import dev.remine.smpcore.teams.types.Team;
+import dev.remine.smpcore.teams.types.TeamMember;
 import net.hypixel.api.HypixelAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.inventivetalent.menubuilder.MenuBuilderPlugin;
 
 import java.io.IOException;
 import java.util.UUID;
 
 public final class SMPCore extends JavaPlugin {
+
+    static {
+        ConfigurationSerialization.registerClass(Team.class, "Team");
+        ConfigurationSerialization.registerClass(TeamMember.class, "TeamMember");
+        ConfigurationSerialization.registerClass(SMPPlayer.class, "SMPPlayer");
+    }
 
 
     private HypixelAPI hypixelAPI;
@@ -23,8 +35,12 @@ public final class SMPCore extends JavaPlugin {
 
     public SMPTeamsManager teamsManager;
 
+    public MenuBuilderPlugin menuBuilderPlugin;
+
     @Override
     public void onEnable() {
+
+        menuBuilderPlugin = (MenuBuilderPlugin) Bukkit.getPluginManager().getPlugin("MenuBuilder");
 
         setupConfig();
         FileConfiguration configuration = getConfig();
@@ -73,6 +89,7 @@ public final class SMPCore extends JavaPlugin {
     public void onDisable() {
         try {
             teamsManager.handleSave();
+            playerManager.handleSave();
         } catch (IOException e) {
             getLogger().warning("Error saving teams.yml");
             throw new RuntimeException(e);

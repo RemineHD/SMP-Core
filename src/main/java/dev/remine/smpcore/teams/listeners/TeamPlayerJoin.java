@@ -30,8 +30,6 @@ public class TeamPlayerJoin implements Listener {
 
         if (playerTeam != null)
         {
-            player.sendMessage("YOU ARE IN A TEAM");
-            player.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&7" + player.getName() + playerTeam.getTeamColor() + " [" + playerTeam.getTeamName() + "]"));
             if (!playerTeam.getMotd().equals("")) {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "\n" +
                         " &2◆ &a&lTEAM MOTD \n" +
@@ -46,10 +44,8 @@ public class TeamPlayerJoin implements Listener {
                 }
 
             }
-        } else {
-            player.sendMessage("YOU ARE NOT IN A TEAM");
-            player.setDisplayName(ChatColor.GRAY + player.getName());
         }
+        instance.teamsManager.setupPlayerTeam(player, playerTeam);
     }
 
 }

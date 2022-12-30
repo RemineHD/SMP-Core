@@ -21,8 +21,8 @@ public class TeamColorSubCommand {
                 if (ChatColor.valueOf(args[1]) != null)
                 {
 
-                    ChatColor color = ChatColor.valueOf(args[1]);
-                    if (color == ChatColor.RED && !sender.isOp())
+                    Team.Color color = Team.Color.valueOf(args[1]);
+                    if (color == Team.Color.RED && !sender.isOp())
                     {
                         sender.sendMessage(ChatColor.RED + "Color red is reserved for Admins.");
                         return true;
@@ -40,7 +40,7 @@ public class TeamColorSubCommand {
                                 if (member.getMemberId().equals(player.getUniqueId()) && member.getMemberRole() == TeamMember.Role.LEADER)
                                 {
                                     team.setTeamColor(color);
-                                    sender.sendMessage(ChatColor.GREEN + "Successfully updated team color to: " + color + color.toString());
+                                    sender.sendMessage(ChatColor.GREEN + "Successfully updated team color to: &" + color.getCode() + color.getName());
                                     return true;
                                 } else
                                 {
