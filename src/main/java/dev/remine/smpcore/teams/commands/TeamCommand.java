@@ -35,6 +35,9 @@ public class TeamCommand implements CommandExecutor {
                 return true;
             }
 
+            if (args[0].equalsIgnoreCase("info"))
+                return new TeamInfoSubCommand().execute(instance, sender, command, args);
+
             if (args[0].equalsIgnoreCase("create"))
                 return new TeamCreateSubCommand().execute(instance, sender, command, args);
 

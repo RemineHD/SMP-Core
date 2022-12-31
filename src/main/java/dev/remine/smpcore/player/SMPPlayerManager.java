@@ -7,6 +7,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
@@ -32,9 +33,6 @@ public class SMPPlayerManager implements Listener {
         try {
             setupPlayersStorage();
             getPlayerDataFile().options().copyDefaults(true);
-            playerDataFile.getList("players", Collections.emptyList()).forEach(obj -> {
-                if (obj instanceof SMPPlayer) players.add((SMPPlayer) obj);
-            });
             saveDataFile();
         } catch (Exception exception)
         {
@@ -109,8 +107,35 @@ public class SMPPlayerManager implements Listener {
     public void handlePlayerJoin(PlayerJoinEvent playerJoinEvent)
     {
 
+        playerDataFile.getList("players", Collections.emptyList()).forEach(obj -> {
+            if (obj instanceof SMPPlayer) {
+                SMPPlayer player = (SMPPlayer) obj;
+                if (player.getPlayerId().equals(playerJoinEvent.getPlayer().getUniqueId())) players.add((SMPPlayer) obj);
+            }
+        });
+
         if (getPlayer(playerJoinEvent.getPlayer().getUniqueId()) == null)
             getPlayerOrCreate(playerJoinEvent.getPlayer().getUniqueId());
+
+    }
+
+    @EventHandler
+    public void handlePlayerQuit(PlayerQuitEvent playerQuitEvent)
+    {
+
+        players.removeIf(smpP -> {
+            if (smpP.getPlayerId().equals(playerQuitEvent.getPlayer().getUniqueId()))
+                return true;
+            else
+                return false;
+        });
+        try {
+            handleSave();
+        } catch (Exception e)
+        {
+            System.out.println("Error saving players file in Player Quit Event.");
+            e.printStackTrace();
+        }
 
     }
 
